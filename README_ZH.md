@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://cidekick.com">
-   <img src="./public/assets/banner.gif" alt="Logo">
+  <a href="https://www.cympotek.com">
+   <img src="./public/assets/logo.png" alt="Logo">
   </a>
 
   <h1 align="center">Cidekick：您的AI製造業助理</h1>
