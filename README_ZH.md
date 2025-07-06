@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://www.cympotek.com">
-   <img src="./public/assets/logo.png" alt="Logo">
+   <img src="./public/assets/logo.png?type=new" alt="Logo">
   </a>
 
   <h1 align="center">Cidekick：您的 AI 製造業助理</h1>
