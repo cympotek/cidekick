@@ -46,7 +46,7 @@ npm run setup
 ## Highlights
 
 ### Component Identification
-<img width="100%" alt="component-identification" src="./public/assets/image2.png">
+<img width="100%" alt="component-identification" src="./public/assets/image3.png">
 
 ## Multi-Language Support
 

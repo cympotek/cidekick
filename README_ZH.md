@@ -46,7 +46,7 @@ npm run setup
 ## 功能亮點
 
 ### 零件識別
-<img width="100%" alt="零件識別" src="./public/assets/image2.png">
+<img width="100%" alt="零件識別" src="./public/assets/image3.png">
 
 ## 多語言支援
 
