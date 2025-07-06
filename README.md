@@ -11,11 +11,6 @@
 
 </p>
 
-
-<p align="center">
-  <a href="https://discord.gg/UCZH5B5Hpd"><img src="./public/assets/button_dc.png" width="80" alt="Cidekick Discord"></a>&ensp;<a href="https://cidekick.com"><img src="./public/assets/button_we.png" width="105" alt="Cidekick Website"></a>&ensp;<a href="https://x.com/intent/user?screen_name=leinadpark"><img src="./public/assets/button_xe.png" width="109" alt="Follow Daniel"></a>
-</p>
-
 > This project is a fork of [Glass](https://github.com/pickle-com/glass), with modifications and enhancements. Thanks to [Soham](https://x.com/soham_btw) and all the open-source contributors who made this possible!
 
 🤖 **Your AI assistant for manufacturing.** Cidekick analyzes schematics, identifies components from images, live video, or meetings, and helps streamline your entire production workflow.

@@ -12,10 +12,6 @@
 </p>
 
 
-<p align="center">
-  <a href="https://discord.gg/UCZH5B5Hpd"><img src="./public/assets/button_dc.png" width="80" alt="Cidekick Discord"></a>&ensp;<a href="https://cidekick.com"><img src="./public/assets/button_we.png" width="105" alt="Cidekick Website"></a>&ensp;<a href="https://x.com/intent/user?screen_name=leinadpark"><img src="./public/assets/button_xe.png" width="109" alt="Follow Daniel"></a>
-</p>
-
 > 本專案為 [Glass](https://github.com/pickle-com/glass) 的一個分支，並在其基礎上進行了修改和增強。感謝 [Soham](https://x.com/soham_btw) 以及所有讓此專案成為可能的開源貢獻者！
 
 🤖 **您的 AI 製造業助理。** Cidekick 能分析電路圖、從圖片、即時影像或會議中識別組件，並協助您簡化整體生產流程。
