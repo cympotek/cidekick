@@ -1,0 +1,47 @@
+# electron-builder.yml
+
+# The unique application ID
+appId: com.cidekick.app
+
+# The user-facing application name
+productName: Cidekick
+
+# Publish configuration for GitHub releases
+publish:
+    provider: github
+    owner: cidekick
+    repo: cidekick
+    releaseType: draft
+
+# List of files to be included in the app package
+files:
+    - src/**/*
+    - package.json
+    - cidekick_web/backend_node/**/*
+    - '!**/node_modules/electron/**'
+    - public/build/**/*
+
+# Additional resources to be copied into the app's resources directory
+extraResources:
+    - from: cidekick_web/out
+      to: out
+
+asarUnpack:
+    - "src/assets/SystemAudioDump"
+
+# macOS specific configuration
+mac:
+    # The application category type
+    category: public.app-category.utilities
+    # Path to the .icns icon file
+    icon: src/assets/logo.icns
+    # Minimum macOS version (supports both Intel and Apple Silicon)
+    minimumSystemVersion: '11.0'
+    hardenedRuntime: true
+    entitlements: entitlements.plist
+    entitlementsInherit: entitlements.plist
+    target:
+      - target: dmg
+        arch: universal
+      - target: zip
+        arch: universal
