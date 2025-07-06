@@ -67,11 +67,11 @@ Currently supports English, Chinese (中文), and Japanese (日文).
 
 <img width="100%" alt="booking-screen" src="./public/assets/01.gif">
 
-### Use your own OpenAI API key, or sign up to use ours (free)
+### Use your own OpenAI API key
 
-<img width="100%" alt="booking-screen" src="./public/assets/02.gif">
+Apply from [Google AI Studio](https://aistudio.google.com/).
 
-You can visit [here](https://platform.openai.com/api-keys) to get your OpenAI API Key.
+Or You can visit [OpenAI API](https://platform.openai.com/api-keys) to get your OpenAI API Key.
 
 ## Keyboard Shortcuts
 

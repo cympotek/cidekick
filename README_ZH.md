@@ -66,11 +66,11 @@ npm run setup
 
 <img width="100%" alt="booking-screen" src="./public/assets/01.gif">
 
-### 使用您自己的 OpenAI API 金鑰，或註冊使用我們的（免費）
+### 使用您自己的 Gemini API /  OpenAI API 金鑰（免費）
 
-<img width="100%" alt="booking-screen" src="./public/assets/02.gif">
+[Google AI Studio](https://aistudio.google.com/)
 
-您可以前往 [此處](https://platform.openai.com/api-keys) 取得您的 OpenAI API 金鑰。
+您可以前往 [OpenAI API](https://platform.openai.com/api-keys) 取得您的 OpenAI API 金鑰。
 
 ## 鍵盤快捷鍵
 
