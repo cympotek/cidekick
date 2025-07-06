@@ -66,11 +66,11 @@ npm run setup
 
 <img width="100%" alt="booking-screen" src="./public/assets/01.gif">
 
-### 使用您自己的 Gemini API /  OpenAI API 金鑰（免費）
+### 使用您自己的 Gemini API / OpenAI API 金鑰
 
-[Google AI Studio](https://aistudio.google.com/)
+您可以從 [Google AI Studio](https://aistudio.google.com/) 申請。
 
-您可以前往 [OpenAI API](https://platform.openai.com/api-keys) 取得您的 OpenAI API 金鑰。
+或者，您也可以前往 [OpenAI API](https://platform.openai.com/api-keys) 取得您的 OpenAI API 金鑰。
 
 ## 鍵盤快捷鍵
 
@@ -86,8 +86,4 @@ npm run setup
 
 ## 關於 Cidekick
 
-**我們的使命是為每個人打造一個活生生的數位助理。** Cidekick 是一個值得信賴的管道，能將您的日常數據轉化為可行的見解。請造訪 [www.cympotek.com](https://www.cympotek.com) 聯繫我們。
-
-## Star 歷史
-
-[![Star History Chart](https://api.star-history.com/svg?repos=cympotek/cidekick&type=Date)](https://www.star-history.com/#cympotek/cidekick&Date) 
+**我們的使命是為每個人打造一個活生生的數位助理。** Cidekick 是一個值得信賴的管道，能將您的日常數據轉化為可行的見解。請造訪 [www.cympotek.com](https://www.cympotek.com) 聯繫我們。 
