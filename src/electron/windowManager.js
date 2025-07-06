@@ -1,4 +1,4 @@
-const { BrowserWindow, globalShortcut, ipcMain, screen, app, shell, desktopCapturer } = require('electron');
+const { BrowserWindow, globalShortcut, ipcMain, screen, app, shell, desktopCapturer, Tray, Menu, nativeImage } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const os = require('os');
@@ -25,6 +25,7 @@ let lastScreenshot = null;
 let settingsHideTimer = null;
 
 let selectedCaptureSourceId = null;
+let tray = null;
 
 const windowDefinitions = {
     header: {
@@ -905,6 +906,7 @@ function toggleAllWindowsVisibility() {
 
         movementManager.hideToEdge(nearestEdge, () => {
             header.hide();
+            createTray(); // Create tray icon when hiding
             console.log('[Visibility] Smart hide completed');
         });
     } else {
@@ -945,6 +947,72 @@ function ensureDataDirectories() {
     });
 
     return { imageDir, audioDir };
+}
+
+function createTray() {
+    if (tray) return;
+    
+    // Create a small icon for the tray (16x16 or 22x22 for macOS)
+    const iconPath = path.join(__dirname, '../assets/logo.png');
+    let trayIcon = nativeImage.createFromPath(iconPath);
+    
+    // Resize for system tray (macOS prefers 22x22, Windows 16x16)
+    const isMac = process.platform === 'darwin';
+    trayIcon = trayIcon.resize({ 
+        width: isMac ? 22 : 16, 
+        height: isMac ? 22 : 16 
+    });
+    
+    tray = new Tray(trayIcon);
+    
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Show Cidekick',
+            click: () => {
+                showAllWindows();
+                destroyTray();
+            }
+        },
+        { type: 'separator' },
+        {
+            label: 'Quit',
+            click: () => {
+                app.quit();
+            }
+        }
+    ]);
+    
+    tray.setToolTip('Cidekick');
+    tray.setContextMenu(contextMenu);
+    
+    // On macOS, clicking the tray icon shows the app
+    tray.on('click', () => {
+        showAllWindows();
+        destroyTray();
+    });
+}
+
+function destroyTray() {
+    if (tray) {
+        tray.destroy();
+        tray = null;
+    }
+}
+
+function showAllWindows() {
+    const header = windowPool.get('header');
+    if (header && !header.isDestroyed()) {
+        header.show();
+        // Show other windows that were previously visible
+        lastVisibleWindows.forEach(windowName => {
+            if (windowName !== 'header') {
+                const window = windowPool.get(windowName);
+                if (window && !window.isDestroyed()) {
+                    window.show();
+                }
+            }
+        });
+    }
 }
 
 function createWindows() {
@@ -1363,10 +1431,18 @@ function setupIpcHandlers(openaiSessionRef) {
     });
 
     ipcMain.handle('hide-all', () => {
+        let anyWindowsHidden = false;
         windowPool.forEach(win => {
             if (win.isFocused()) return;
-            win.hide();
+            if (win.isVisible()) {
+                win.hide();
+                anyWindowsHidden = true;
+            }
         });
+        // Create tray if any windows were hidden
+        if (anyWindowsHidden) {
+            createTray();
+        }
     });
 
     ipcMain.handle('quit-application', () => {

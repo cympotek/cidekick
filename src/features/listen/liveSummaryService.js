@@ -146,6 +146,7 @@ function debounceTheirCompletion(text) {
 let systemAudioProc = null;
 
 let analysisIntervalId = null;
+let audioSendCount = 0;
 
 /**
  * Converts conversation history into text to include in the prompt.
@@ -577,6 +578,8 @@ async function initializeLiveSummarySession(language = 'en') {
     sendToRenderer('update-status', 'Initializing sessions...');
 
     const API_KEY = getApiKey();
+    console.log(`[DEBUG] API Key retrieved: ${API_KEY ? 'Yes (length: ' + API_KEY.length + ')' : 'No'}`);
+    
     if (!API_KEY) {
         console.error('FATAL ERROR: API Key is not defined.');
         sendToRenderer('update-status', 'API Key not configured.');
@@ -593,18 +596,31 @@ async function initializeLiveSummarySession(language = 'en') {
 
     try {
         const handleMyMessage = message => {
+            console.log(`[DEBUG] Received STT message for Me - Provider: ${isGemini ? 'Gemini' : 'OpenAI'}`, {
+                type: message.type,
+                hasServerContent: !!message.serverContent,
+                hasTranscript: !!message.transcript,
+                hasDelta: !!message.delta,
+                messageKeys: Object.keys(message)
+            });
+
             if (isGemini) {
-                // console.log('[Gemini Raw Message - Me]:', JSON.stringify(message, null, 2));
+                console.log('[Gemini Raw Message - Me]:', JSON.stringify(message, null, 2));
                 const text = message.serverContent?.inputTranscription?.text || '';
                 if (text && text.trim()) {
+                    console.log(`[DEBUG] Gemini transcription received for Me: "${text}"`);
                     const finalUtteranceText = text.trim().replace(/<noise>/g, '').trim();
                     if (finalUtteranceText && finalUtteranceText !== '.') {
                         debounceMyCompletion(finalUtteranceText);
                     }
+                } else {
+                    console.log('[DEBUG] Gemini message received but no transcription text found');
                 }
             } else {
                 const type = message.type;
                 const text = message.transcript || message.delta || (message.alternatives && message.alternatives[0]?.transcript) || '';
+                
+                console.log(`[DEBUG] OpenAI message type: ${type}, text: "${text}"`);
 
                 if (type === 'conversation.item.input_audio_transcription.delta') {
                     if (myCompletionTimer) clearTimeout(myCompletionTimer);
@@ -621,11 +637,14 @@ async function initializeLiveSummarySession(language = 'en') {
                         });
                     }
                 } else if (type === 'conversation.item.input_audio_transcription.completed') {
+                    console.log(`[DEBUG] Transcription completed for Me: "${text}"`);
                     if (text && text.trim()) {
                         const finalUtteranceText = text.trim();
                         myCurrentUtterance = '';
                         debounceMyCompletion(finalUtteranceText);
                     }
+                } else if (type === 'error') {
+                    console.error('[ERROR] OpenAI STT error:', message);
                 }
             }
 
@@ -635,18 +654,32 @@ async function initializeLiveSummarySession(language = 'en') {
         };
 
         const handleTheirMessage = message => {
+            console.log(`[DEBUG] Received STT message for Them - Provider: ${isGemini ? 'Gemini' : 'OpenAI'}`, {
+                type: message.type,
+                hasServerContent: !!message.serverContent,
+                hasTranscript: !!message.transcript,
+                hasDelta: !!message.delta,
+                messageKeys: Object.keys(message)
+            });
+
             if (isGemini) {
-                // console.log('[Gemini Raw Message - Them]:', JSON.stringify(message, null, 2));
+                console.log('[Gemini Raw Message - Them]:', JSON.stringify(message, null, 2));
                 const text = message.serverContent?.inputTranscription?.text || '';
                 if (text && text.trim()) {
+                    console.log(`[DEBUG] Gemini transcription received for Them: "${text}"`);
                     const finalUtteranceText = text.trim().replace(/<noise>/g, '').trim();
                     if (finalUtteranceText && finalUtteranceText !== '.') {
                         debounceTheirCompletion(finalUtteranceText);
                     }
+                } else {
+                    console.log('[DEBUG] Gemini message received but no transcription text found');
                 }
             } else {
                 const type = message.type;
                 const text = message.transcript || message.delta || (message.alternatives && message.alternatives[0]?.transcript) || '';
+                
+                console.log(`[DEBUG] OpenAI message type: ${type}, text: "${text}"`);
+
                 if (type === 'conversation.item.input_audio_transcription.delta') {
                     if (theirCompletionTimer) clearTimeout(theirCompletionTimer);
                     theirCompletionTimer = null;
@@ -662,11 +695,14 @@ async function initializeLiveSummarySession(language = 'en') {
                         });
                     }
                 } else if (type === 'conversation.item.input_audio_transcription.completed') {
+                    console.log(`[DEBUG] Transcription completed for Them: "${text}"`);
                     if (text && text.trim()) {
                         const finalUtteranceText = text.trim();
                         theirCurrentUtterance = '';
                         debounceTheirCompletion(finalUtteranceText);
                     }
+                } else if (type === 'error') {
+                    console.error('[ERROR] OpenAI STT error:', message);
                 }
             }
             
@@ -926,20 +962,54 @@ function setupLiveSummaryIpcHandlers() {
     });
 
     ipcMain.handle('send-audio-content', async (event, { data, mimeType }) => {
-    const provider = await getAiProvider();
-    const isGemini  = provider === 'gemini';
-        if (!mySttSession) return { success: false, error: 'User STT session not active' };
+        const provider = await getAiProvider();
+        const isGemini  = provider === 'gemini';
+        
+        audioSendCount++;
+        
+        // Only log every 100th audio chunk to reduce console spam
+        if (audioSendCount % 100 === 0) {
+            console.log(`[DEBUG] send-audio-content called (${audioSendCount} total) - Provider: ${provider}, mimeType: ${mimeType}, dataLength: ${data?.length || 0}`);
+        }
+        
+        if (!mySttSession) {
+            console.error('[ERROR] User STT session not active');
+            return { success: false, error: 'User STT session not active' };
+        }
+        
         try {
-            // await mySttSession.sendRealtimeInput(data);
-                   // provider에 맞는 형식으로 래핑
-       const payload = isGemini
-           ? { audio: { data, mimeType: mimeType || 'audio/pcm;rate=24000' } }
-           : data;   // OpenAI는 base64 string 그대로
+            // provider에 맞는 형식으로 래핑
+            const payload = isGemini
+                ? { audio: { data, mimeType: mimeType || 'audio/pcm;rate=24000' } }
+                : data;   // OpenAI는 base64 string 그대로
 
-       await mySttSession.sendRealtimeInput(payload);
+            if (audioSendCount % 100 === 0) {
+                console.log(`[DEBUG] Sending audio chunk #${audioSendCount} to ${provider} STT session`);
+            }
+            
+            await mySttSession.sendRealtimeInput(payload);
             return { success: true };
         } catch (error) {
-            console.error('Error sending user audio:', error);
+            console.error('[ERROR] Failed to send user audio:', error);
+            return { success: false, error: error.message };
+        }
+    });
+
+    ipcMain.handle('send-image-content', async (event, { data, mimeType }) => {
+        const provider = await getAiProvider();
+        const isGemini = provider === 'gemini';
+        if (!mySttSession) return { success: false, error: 'Session not active' };
+        try {
+            // Send image to the AI session
+            const payload = isGemini
+                ? { image: { data, mimeType: mimeType || 'image/jpeg' } }
+                : { type: 'input_item', item: { type: 'image', data } };
+            
+            await mySttSession.sendRealtimeInput(payload);
+            console.log('📸 Image sent to AI session successfully');
+            return { success: true };
+        } catch (error) {
+            console.error('Error sending image:', error);
             return { success: false, error: error.message };
         }
     });

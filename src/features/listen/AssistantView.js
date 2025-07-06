@@ -1020,6 +1020,11 @@ export class AssistantView extends LitElement {
         }, 0);
     }
 
+    // Add method to handle real-time transcription updates from renderer
+    updateRealtimeTranscription(data) {
+        this.handleSttUpdate(null, data);
+    }
+
     async handleRequestClick(requestText) {
         console.log('🔥 Analysis request clicked:', requestText);
 

@@ -723,10 +723,15 @@ function setupMicProcessing(micStream) {
             const pcmData16 = convertFloat32ToInt16(processedChunk);
             const base64Data = arrayBufferToBase64(pcmData16.buffer);
 
-            await ipcRenderer.invoke('send-audio-content', {
+            const sendResult = await ipcRenderer.invoke('send-audio-content', {
                 data: base64Data,
                 mimeType: 'audio/pcm;rate=24000',
             });
+            
+            // Log send failures
+            if (!sendResult.success) {
+                console.error('Failed to send audio:', sendResult.error);
+            }
         }
     };
 
@@ -756,10 +761,15 @@ function setupLinuxMicProcessing(micStream) {
             const pcmData16 = convertFloat32ToInt16(chunk);
             const base64Data = arrayBufferToBase64(pcmData16.buffer);
 
-            await ipcRenderer.invoke('send-audio-content', {
+            const sendResult = await ipcRenderer.invoke('send-audio-content', {
                 data: base64Data,
                 mimeType: 'audio/pcm;rate=24000',
             });
+            
+            // Log send failures
+            if (!sendResult.success) {
+                console.error('Failed to send audio:', sendResult.error);
+            }
         }
     };
 
@@ -789,10 +799,15 @@ function setupWindowsLoopbackProcessing() {
             const pcmData16 = convertFloat32ToInt16(chunk);
             const base64Data = arrayBufferToBase64(pcmData16.buffer);
 
-            await ipcRenderer.invoke('send-audio-content', {
+            const sendResult = await ipcRenderer.invoke('send-audio-content', {
                 data: base64Data,
                 mimeType: 'audio/pcm;rate=24000',
             });
+            
+            // Log send failures
+            if (!sendResult.success) {
+                console.error('Failed to send audio:', sendResult.error);
+            }
         }
     };
 
@@ -818,6 +833,12 @@ async function captureScreenshot(imageQuality = 'medium', isManual = false) {
         if (result.success && result.base64) {
             // Store the latest screenshot
             lastScreenshotBase64 = result.base64;
+
+            // Send screenshot to OpenAI
+            const sendResult = await ipcRenderer.invoke('send-image-content', {
+                data: result.base64,
+                mimeType: 'image/jpeg',
+            });
 
             if (sendResult.success) {
                 // Track image tokens after successful send

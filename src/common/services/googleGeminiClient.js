@@ -139,26 +139,43 @@ function createGeminiChat(client, model = 'gemini-2.5-flash', config = {}) {
 // }
 
 async function connectToGeminiSession(apiKey, { language = 'en-US', callbacks = {} } = {}) {
+        console.log(`[DEBUG] Connecting to Gemini STT session`);
+        console.log(`[DEBUG] API Key: ${apiKey ? 'Present (length: ' + apiKey.length + ')' : 'Missing'}`);
+        
         // ① 옛날 스타일 helper 재사용
         const liveClient = new GoogleGenAI({ vertexai: false, apiKey });
     
         // ② 언어 코드 강제 BCP-47 변환
         const lang = language.includes('-') ? language : `${language}-US`;
+        console.log(`[DEBUG] Using language: ${lang}`);
     
-        const session = await liveClient.live.connect({
-            model: 'gemini-live-2.5-flash-preview',
-            callbacks,
-            config: {
-                inputAudioTranscription: {},
-                speechConfig: { languageCode: lang },
-            },
-        });
-    
-        // ③ SDK 0.5+ : sendRealtimeInput 가 정식 이름
-        return {
-            sendRealtimeInput: async payload => session.sendRealtimeInput(payload),
-            close: async () => session.close(),
-        };
+        try {
+            const session = await liveClient.live.connect({
+                model: 'gemini-live-2.5-flash-preview',
+                callbacks,
+                config: {
+                    inputAudioTranscription: {},
+                    speechConfig: { languageCode: lang },
+                },
+            });
+            
+            console.log('[DEBUG] Gemini session connected successfully');
+        
+            // ③ SDK 0.5+ : sendRealtimeInput 가 정식 이름
+            return {
+                sendRealtimeInput: async payload => {
+                    console.log('[DEBUG] Sending payload to Gemini:', { 
+                        hasAudio: !!payload.audio,
+                        audioDataLength: payload.audio?.data?.length || 0
+                    });
+                    return session.sendRealtimeInput(payload);
+                },
+                close: async () => session.close(),
+            };
+        } catch (error) {
+            console.error('[ERROR] Failed to connect to Gemini session:', error);
+            throw error;
+        }
      }
 
 

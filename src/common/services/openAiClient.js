@@ -50,11 +50,14 @@ async function connectToOpenAiSession(key, config, keyType) {
             'OpenAI-Beta'         : 'realtime=v1',
           };
 
+    console.log(`[DEBUG] Connecting to OpenAI STT WebSocket: ${wsUrl}`);
+    console.log(`[DEBUG] Using ${keyType}: ${key ? 'Present' : 'Missing'}`);
+    
     const ws = new WebSocket(wsUrl, { headers });
 
     return new Promise((resolve, reject) => {
         ws.onopen = () => {
-            console.log("WebSocket session opened.");
+            console.log("WebSocket session opened successfully.");
 
             const sessionConfig = {
                 type: 'transcription_session.update',
@@ -77,6 +80,7 @@ async function connectToOpenAiSession(key, config, keyType) {
                 }
             };
             
+            console.log('[DEBUG] Sending session config:', JSON.stringify(sessionConfig, null, 2));
             ws.send(JSON.stringify(sessionConfig));
             
             resolve({

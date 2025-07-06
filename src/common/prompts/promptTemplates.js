@@ -406,26 +406,29 @@ Provide only the exact words to say in **markdown format**. Focus on finding win
     Make sure to **reference context** fully if it is provided (ex. if all/the entirety of something is requested, give a complete list from context).
     ----------`,
     
-        outputInstructions: `IMPORTANT: Respond in {{LANGUAGE}} language. Keep all formatting and structure requirements.
+        outputInstructions: `IMPORTANT: Respond in {{LANGUAGE}} language. 
 
-When providing a conversation summary, use this format:
+YOU MUST USE THIS EXACT FORMAT (DO NOT SKIP ANY SECTION):
 
 **Summary Overview**
-- Main discussion point with context
+- Main point from the conversation (if available)
+- Second point from the conversation (if available)
+- Third point from the conversation (if available)
 
-**Key Topic: [Topic Name]**
-- First key insight
-- Second key insight  
-- Third key insight
+**Key Topic: [Most Recent Topic Name]**
+- Key insight or detail about this topic
+- Another relevant point about this topic
+- Additional context if available
 
 **Extended Explanation**
-Provide 2-3 sentences explaining the context and implications.
+Provide 2-3 sentences explaining the context and implications of the discussion.
 
 **Suggested Questions**
-1. First follow-up question?
-2. Second follow-up question?
-3. Third follow-up question?
+1. What specific aspect would you like to explore further?
+2. How does this relate to your current objectives?
+3. What are the next steps to consider?
 
+CONVERSATION TO ANALYZE:
 {{CONVERSATION_HISTORY}}`,
     },
 
