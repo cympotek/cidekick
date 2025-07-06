@@ -88,7 +88,3 @@ We love contributions! Feel free to open issues for bugs or feature requests.
 ## About Cidekick
 
 **Our mission is to build a living digital assistant for everyone.** Cidekick is a trusted pipeline that transforms your daily data into actionable insights. Visit [www.cympotek.com](https://www.cympotek.com) to contact us.
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=cympotek/cidekick&type=Date)](https://www.star-history.com/#cympotek/cidekick&Date)
