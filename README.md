@@ -70,18 +70,6 @@ npm run setup
 
 You can visit [here](https://platform.openai.com/api-keys) to get your OpenAI API Key.
 
-### Liquid Design (coming soon)
-
-<img width="100%" alt="booking-screen" src="./public/assets/03.gif">
-
-<p>
-  for a more detailed guide, please refer to this <a href="https://www.youtube.com/watch?v=qHg3_4bU1Dw">video.</a>
-  <i style="color:gray; font-weight:300;">
-    we don't waste money on fancy vids; we just code.
-  </i>
-</p>
-
-
 ## Keyboard Shortcuts
 
 `Ctrl/Cmd + \` : show and hide main window
@@ -93,19 +81,6 @@ You can visit [here](https://platform.openai.com/api-keys) to get your OpenAI AP
 ## Contributing
 
 We love contributions! Feel free to open issues for bugs or feature requests.
-
-## 🛠 Current Issues & Improvements
-
-| Status | Issue                          | Description                                       |
-|--------|--------------------------------|---------------------------------------------------|
-| 🚧 WIP     | AEC Improvement                | Transcription is not working occasionally |
-| 🚧 WIP     | Code Refactoring               | Refactoring the entire codebase for better maintainability. |
-| 🚧 WIP      | Firebase Data Storage Issue    | Session & ask should be saved in firebase for signup users |
-| 🚧 WIP      | Login Issue                    | Currently breaking when switching between local and sign-in mode |
-| 🚧 WIP      | Liquid Design                    | Liquid UI for MacOS 26 |
-| 🚧 WIP      | Permission Issue           | Mic & system audio & display capture permission sometimes not working|
-
-
 
 ## About Cidekick
 

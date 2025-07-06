@@ -66,18 +66,6 @@ npm run setup
 
 您可以前往 [此處](https://platform.openai.com/api-keys) 取得您的 OpenAI API 金鑰。
 
-### 液態設計（即將推出）
-
-<img width="100%" alt="booking-screen" src="./public/assets/03.gif">
-
-<p>
-  更詳細的指南，請參考此<a href="https://www.youtube.com/watch?v=qHg3_4bU1Dw">影片</a>。
-  <i style="color:gray; font-weight:300;">
-    我們不把錢浪費在花俏的影片上；我們只專心寫程式。
-  </i>
-</p>
-
-
 ## 鍵盤快捷鍵
 
 `Ctrl/Cmd + \`：顯示和隱藏主視窗
