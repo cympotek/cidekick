@@ -54,13 +54,19 @@ npm run setup
 ## Highlights
 
 ### Component Identification
-<img width="100%" alt="component-identification" src="./public/assets/image.png">
+<img width="100%" alt="component-identification" src="./public/assets/image2.png">
+
+<img width="100%" alt="component-identification" src="./public/assets/image3.png">
+
+Support Multi-lang. Now can support English / 中文(Chinese) / 日文(Japan). 
+
+<img width="100%" alt="component-identification" src="./public/assets/image4.png">
 
 ### Ask: get answers based on all your previous screen actions & audio
 
 <img width="100%" alt="booking-screen" src="./public/assets/00.gif">
 
-### Meetings: real-time meeting notes, live summaries, session records
+### Capture Screen for advice like the manufacturing assistant
 
 <img width="100%" alt="booking-screen" src="./public/assets/01.gif">
 

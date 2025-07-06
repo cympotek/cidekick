@@ -1,4 +1,8 @@
 <p align="center">
+  <a href="README.md">English</a> | 中文
+</p>
+
+<p align="center">
   <a href="https://www.cympotek.com">
    <img src="./public/assets/logo.png" alt="Logo">
   </a>
@@ -50,13 +54,17 @@ npm run setup
 ## 功能亮點
 
 ### 零件識別
-<img width="100%" alt="零件識別" src="./public/assets/image.png">
+<img width="100%" alt="零件識別" src="./public/assets/image2.png">
+<img width="100%" alt="零件識別" src="./public/assets/image3.png">
+
+支援多國語言。現在支援英文／中文／日文。
+<img width="100%" alt="多語言支援" src="./public/assets/image4.png">
 
 ### 提問：根據您先前所有的螢幕操作與音訊內容獲得解答
 
 <img width="100%" alt="booking-screen" src="./public/assets/00.gif">
 
-### 會議：即時會議記錄、即時摘要、會話紀錄
+### 擷取畫面以獲得製造助理般的建議
 
 <img width="100%" alt="booking-screen" src="./public/assets/01.gif">
 
@@ -77,19 +85,6 @@ npm run setup
 ## 貢獻
 
 我們歡迎各種貢獻！若有錯誤回報或功能請求，請隨時提出問題。
-
-## 🛠 目前問題與改進
-
-| 狀態 | 問題 | 描述 |
-|---|---|---|
-| 🚧 進行中 | AEC 改進 | 轉錄功能偶爾會失效 |
-| 🚧 進行中 | 程式碼重構 | 為了更好的可維護性，正在重構整個程式庫。 |
-| 🚧 進行中 | Firebase 資料儲存問題 | 註冊用戶的會話與提問應儲存在 Firebase 中 |
-| 🚧 進行中 | 登入問題 | 目前在本地模式和登入模式之間切換時會出錯 |
-| 🚧 進行中 | 液態設計 | 適用於 macOS 26 的液態使用者介面 |
-| 🚧 進行中 | 權限問題 | 麥克風、系統音訊及螢幕擷取權限有時無法正常運作 |
-
-
 
 ## 關於 Cidekick
 
