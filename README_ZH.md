@@ -7,7 +7,7 @@
    <img src="./public/assets/logo.png" alt="Logo">
   </a>
 
-  <h1 align="center">Cidekick：您的AI製造業助理</h1>
+  <h1 align="center">Cidekick：您的 AI 製造業助理</h1>
 
 </p>
 
@@ -16,21 +16,17 @@
   <a href="https://discord.gg/UCZH5B5Hpd"><img src="./public/assets/button_dc.png" width="80" alt="Cidekick Discord"></a>&ensp;<a href="https://cidekick.com"><img src="./public/assets/button_we.png" width="105" alt="Cidekick Website"></a>&ensp;<a href="https://x.com/intent/user?screen_name=leinadpark"><img src="./public/assets/button_xe.png" width="109" alt="Follow Daniel"></a>
 </p>
 
-> 本專案為 [CheatingDaddy](https://github.com/sohzm/cheating-daddy) 的一個分支，並在其基礎上進行了修改和增強。感謝 [Soham](https://x.com/soham_btw) 以及所有讓此專案成為可能的開源貢獻者！
+> 本專案為 [Glass](https://github.com/pickle-com/glass) 的一個分支，並在其基礎上進行了修改和增強。感謝 [Soham](https://x.com/soham_btw) 以及所有讓此專案成為可能的開源貢獻者！
 
-🤖 **您的AI製造業助理。** Cidekick能分析電路圖、從圖片或即時影像中識別組件，並協助您簡化整體生產流程。
+🤖 **您的 AI 製造業助理。** Cidekick 能分析電路圖、從圖片、即時影像或會議中識別組件，並協助您簡化整體生產流程。
 
-與我們一起享受開發的樂趣，歡迎加入我們的 [Discord](https://discord.gg/UCZH5B5Hpd)！
-
-## 立即啟動
-
-⚡️ 免去設定，立即使用我們隨裝即用的 macOS 應用程式。[[點此下載]](https://www.dropbox.com/scl/fi/znid09apxiwtwvxer6oc9/Cidekick_latest.dmg?rlkey=gwvvyb3bizkl25frhs4k1zwds&st=37q31b4w&dl=1)
+與我們一起享受開發的樂趣，歡迎隨時提交 Pull Request 或建立 Issue。
 
 ## 快速入門（本地建置）
 
 ### 先決條件
 
-首先下載並安裝 [Python](https://www.python.org/downloads/) 和 [Node](https://nodejs.org/en/download)。
+首先下載並安裝 [Node](https://nodejs.org/en/download)。
 如果您使用 Windows，您還需要安裝 [Visual Studio 的建置工具](https://visualstudio.microsoft.com/downloads/)。
 
 請確保您使用的是 Node.js 20.x.x 版本，以避免原生相依性套件的建置錯誤。
@@ -57,7 +53,10 @@ npm run setup
 <img width="100%" alt="零件識別" src="./public/assets/image2.png">
 <img width="100%" alt="零件識別" src="./public/assets/image3.png">
 
-支援多國語言。現在支援英文／中文／日文。
+## 多語言支援
+
+目前支援英文、中文、日文。
+
 <img width="100%" alt="多語言支援" src="./public/assets/image4.png">
 
 ### 提問：根據您先前所有的螢幕操作與音訊內容獲得解答
@@ -88,7 +87,8 @@ npm run setup
 
 ## 關於 Cidekick
 
-**我們的使命是為每個人打造一個活生生的數位助理。** Cidekick 是一個值得信賴的管道，能將您的日常數據轉化為可行的見解。請造訪 [cidekick.com](https://cidekick.com) 以了解更多資訊。
+**我們的使命是為每個人打造一個活生生的數位助理。** Cidekick 是一個值得信賴的管道，能將您的日常數據轉化為可行的見解。請造訪 [www.cympotek.com](https://www.cympotek.com) 聯繫我們。
 
 ## Star 歷史
-[![Star History Chart](https://api.star-history.com/svg?repos=cidekick/cidekick&type=Date)](https://www.star-history.com/#cidekick/cidekick&Date) 
+
+[![Star History Chart](https://api.star-history.com/svg?repos=cympotek/cidekick&type=Date)](https://www.star-history.com/#cympotek/cidekick&Date) 
