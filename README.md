@@ -14,7 +14,9 @@
 
 > This project is a fork of [CheatingDaddy](https://github.com/sohzm/cheating-daddy) with modifications and enhancements. Thanks to [Soham](https://x.com/soham_btw) and all the open-source contributors who made this possible!
 
-🤖 **Fast, light & open-source**—Cidekick lives on your desktop, sees what you see, listens in real time, understands your context, and turns every moment into structured knowledge.
+🤖 **Your AI assistant for manufacturing.** Cidekick analyzes schematics, identifies components from images or live video, and helps streamline your entire production workflow.
+
+🤖 **您的 AI 製造業助理.** Cidekick 能分析電路圖、從圖片或即時影像中識別組件，並協助您簡化整體生產流程。
 
 💬 **Proactive in meetings**—it surfaces action items, summaries, and answers the instant you need them.
 
@@ -53,6 +55,8 @@ npm run setup
 
 ## Highlights
 
+### Component Identification / 零件識別
+<img width="100%" alt="component-identification" src="./public/assets/image.png">
 
 ### Ask: get answers based on all your previous screen actions & audio
 

@@ -497,7 +497,7 @@ const SidebarComponent = ({ isCollapsed, onToggle, onSearchClick }: SidebarProps
                     <>
                         <Link href="https://cidekick.com" target="_blank" rel="noopener noreferrer" className="flex items-center">
                             <Image
-                                src={isCollapsed ? '/symbol.svg' : '/word.svg'}
+                                src={isCollapsed ? '/logo.png' : '/logo.png'}
                                 alt="Cidekick Logo"
                                 width={50}
                                 height={14}
