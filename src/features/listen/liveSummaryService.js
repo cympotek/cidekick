@@ -158,7 +158,7 @@ function formatConversationForPrompt(conversationTexts, maxTurns = 30) {
     return conversationTexts.slice(-maxTurns).join('\n');
 }
 
-async function makeOutlineAndRequests(conversationTexts, maxTurns = 30) {
+async function makeOutlineAndRequests(conversationTexts, maxTurns = 30, language = 'en') {
     console.log(`🔍 makeOutlineAndRequests called - conversationTexts: ${conversationTexts.length}`);
 
     if (conversationTexts.length === 0) {
@@ -181,7 +181,7 @@ Please build upon this context while analyzing the new conversation segments.
 `;
     }
 
-    const basePrompt = getSystemPrompt('cidekick_analysis', '', false);
+    const basePrompt = getSystemPrompt('cidekick_analysis', '', false, language);
     const systemPrompt = basePrompt.replace('{{CONVERSATION_HISTORY}}', recentConversation);
 
     try {
@@ -194,25 +194,7 @@ Please build upon this context while analyzing the new conversation segments.
                 role: 'user',
                 content: `${contextualPrompt}
 
-Analyze the conversation and provide a structured summary. Format your response as follows:
-
-**Summary Overview**
-- Main discussion point with context
-
-**Key Topic: [Topic Name]**
-- First key insight
-- Second key insight
-- Third key insight
-
-**Extended Explanation**
-Provide 2-3 sentences explaining the context and implications.
-
-**Suggested Questions**
-1. First follow-up question?
-2. Second follow-up question?
-3. Third follow-up question?
-
-Keep all points concise and build upon previous analysis if provided.`,
+Analyze the conversation and provide a structured summary.`,
             },
         ];
 
@@ -394,7 +376,21 @@ async function triggerAnalysisIfNeeded() {
     if (conversationHistory.length >= 5 && conversationHistory.length % 5 === 0) {
         console.log(`🚀 Triggering analysis (non-blocking) - ${conversationHistory.length} conversation texts accumulated`);
 
-        makeOutlineAndRequests(conversationHistory)
+        // Get current language setting
+        let language = 'en';
+        const windows = BrowserWindow.getAllWindows();
+        for (const win of windows) {
+            if (!win.isDestroyed() && win.webContents) {
+                try {
+                    language = await win.webContents.executeJavaScript('localStorage.getItem("selectedLanguage") || "en"');
+                    break;
+                } catch (e) {
+                    // Continue with default
+                }
+            }
+        }
+        
+        makeOutlineAndRequests(conversationHistory, 30, language)
             .then(data => {
                 if (data) {
                     console.log('📤 Sending structured data to renderer');

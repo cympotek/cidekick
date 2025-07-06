@@ -1,6 +1,12 @@
 const { profilePrompts } = require('./promptTemplates.js');
 
-function buildSystemPrompt(promptParts, customPrompt = '', googleSearchEnabled = true) {
+const languageNames = {
+    'en': 'English',
+    'zh': 'Chinese',
+    'ja': 'Japanese'
+};
+
+function buildSystemPrompt(promptParts, customPrompt = '', googleSearchEnabled = true, language = 'en') {
     const sections = [promptParts.intro, '\n\n', promptParts.formatRequirements];
 
     if (googleSearchEnabled) {
@@ -9,12 +15,17 @@ function buildSystemPrompt(promptParts, customPrompt = '', googleSearchEnabled =
 
     sections.push('\n\n', promptParts.content, '\n\nUser-provided context\n-----\n', customPrompt, '\n-----\n\n', promptParts.outputInstructions);
 
-    return sections.join('');
+    // Join all sections and replace language placeholder
+    let prompt = sections.join('');
+    const languageName = languageNames[language] || languageNames['en'];
+    prompt = prompt.replace(/{{LANGUAGE}}/g, languageName);
+
+    return prompt;
 }
 
-function getSystemPrompt(profile, customPrompt = '', googleSearchEnabled = true) {
+function getSystemPrompt(profile, customPrompt = '', googleSearchEnabled = true, language = 'en') {
     const promptParts = profilePrompts[profile] || profilePrompts.interview;
-    return buildSystemPrompt(promptParts, customPrompt, googleSearchEnabled);
+    return buildSystemPrompt(promptParts, customPrompt, googleSearchEnabled, language);
 }
 
 module.exports = {

@@ -1,6 +1,59 @@
 import { html, css, LitElement } from '../../assets/lit-core-2.7.4.min.js';
 
+const i18n = {
+    en: {
+        copyTranscript: 'Copy Transcript',
+        copyAnalysis: 'Copy Glass Analysis',
+        liveInsights: 'Live insights',
+        listening: 'Glass is Listening',
+        showTranscript: 'Show Transcript',
+        showInsights: 'Show Insights',
+        noContent: 'No content yet...',
+        actions: 'Actions',
+        followUps: 'Follow-Ups',
+        currentSummary: 'Current Summary',
+        copied: 'Copied!',
+        question: 'Question',
+        send: 'Send'
+    },
+    zh: {
+        copyTranscript: '複製轉錄',
+        copyAnalysis: '複製分析',
+        liveInsights: '即時洞察',
+        listening: '正在聆聽',
+        showTranscript: '顯示轉錄',
+        showInsights: '顯示洞察',
+        noContent: '尚無內容...',
+        actions: '行動項目',
+        followUps: '後續事項',
+        currentSummary: '當前摘要',
+        copied: '已複製！',
+        question: '問題',
+        send: '發送'
+    },
+    ja: {
+        copyTranscript: 'トランスクリプトをコピー',
+        copyAnalysis: '分析をコピー',
+        liveInsights: 'ライブインサイト',
+        listening: 'リスニング中',
+        showTranscript: 'トランスクリプトを表示',
+        showInsights: 'インサイトを表示',
+        noContent: 'まだコンテンツがありません...',
+        actions: 'アクション',
+        followUps: 'フォローアップ',
+        currentSummary: '現在のサマリー',
+        copied: 'コピーしました！',
+        question: '質問',
+        send: '送信'
+    }
+};
+
 export class AssistantView extends LitElement {
+    // Add getText method to access translations
+    getText(key) {
+        return i18n[this.selectedLanguage]?.[key] || i18n['en'][key] || key;
+    }
+
     static styles = css`
         :host {
             display: block;
@@ -557,6 +610,7 @@ export class AssistantView extends LitElement {
         captureStartTime: { type: Number },
         isSessionActive: { type: Boolean },
         hasCompletedRecording: { type: Boolean },
+        selectedLanguage: { type: String },
     };
 
     constructor() {
@@ -585,6 +639,7 @@ export class AssistantView extends LitElement {
         this.messageIdCounter = 0;
         this.copyState = 'idle';
         this.copyTimeout = null;
+        this.selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
 
         // 마크다운 라이브러리 초기화
         this.marked = null;
@@ -848,7 +903,7 @@ export class AssistantView extends LitElement {
             let sections = [];
 
             if (data.summary && data.summary.length > 0) {
-                sections.push(`Current Summary:\n${data.summary.map(s => `• ${s}`).join('\n')}`);
+                sections.push(`${this.getText('currentSummary')}:\n${data.summary.map(s => `• ${s}`).join('\n')}`);
             }
 
             if (data.topic && data.topic.header && data.topic.bullets.length > 0) {
@@ -856,11 +911,11 @@ export class AssistantView extends LitElement {
             }
 
             if (data.actions && data.actions.length > 0) {
-                sections.push(`\nActions:\n${data.actions.map(a => `▸ ${a}`).join('\n')}`);
+                sections.push(`\n${this.getText('actions')}:\n${data.actions.map(a => `▸ ${a}`).join('\n')}`);
             }
 
             if (data.followUps && data.followUps.length > 0) {
-                sections.push(`\nFollow-Ups:\n${data.followUps.map(f => `▸ ${f}`).join('\n')}`);
+                sections.push(`\n${this.getText('followUps')}:\n${data.followUps.map(f => `▸ ${f}`).join('\n')}`);
             }
 
             textToCopy = sections.join('\n\n').trim();
@@ -1022,6 +1077,16 @@ export class AssistantView extends LitElement {
                 }
             });
         }
+        
+        // Listen for language changes
+        this.handleStorageChange = (e) => {
+            if (e.key === 'selectedLanguage') {
+                this.selectedLanguage = e.newValue || 'en';
+                this.requestUpdate();
+            }
+        };
+        window.addEventListener('storage', this.handleStorageChange);
+        
         this._startDebugStream();
     }
 
@@ -1040,6 +1105,11 @@ export class AssistantView extends LitElement {
         if (window.require) {
             const { ipcRenderer } = window.require('electron');
             ipcRenderer.removeListener('stt-update', this.handleSttUpdate);
+        }
+        
+        // Remove language change listener
+        if (this.handleStorageChange) {
+            window.removeEventListener('storage', this.handleStorageChange);
         }
 
         this._stopDebugStream();
@@ -1074,11 +1144,11 @@ export class AssistantView extends LitElement {
     render() {
         const displayText = this.isHovering
             ? this.viewMode === 'transcript'
-                ? 'Copy Transcript'
-                : 'Copy Glass Analysis'
+                ? this.getText('copyTranscript')
+                : this.getText('copyAnalysis')
             : this.viewMode === 'insights'
-            ? `Live insights`
-            : `Glass is Listening ${this.elapsedTime}`;
+            ? this.getText('liveInsights')
+            : `${this.getText('listening')} ${this.elapsedTime}`;
 
         const data = this.structuredData || {
             summary: [],
@@ -1104,14 +1174,14 @@ export class AssistantView extends LitElement {
                                           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
                                           <circle cx="12" cy="12" r="3" />
                                       </svg>
-                                      <span>Show Transcript</span>
+                                      <span>${this.getText('showTranscript')}</span>
                                   `
                                 : html`
                                       <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                           <path d="M9 11l3 3L22 4" />
                                           <path d="M22 12v7a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h11" />
                                       </svg>
-                                      <span>Show Insights</span>
+                                      <span>${this.getText('showInsights')}</span>
                                   `}
                         </button>
                         <button
@@ -1136,7 +1206,6 @@ export class AssistantView extends LitElement {
                 </div>
 
                 <div class="insights-container ${this.viewMode !== 'insights' ? 'hidden' : ''}">
-                    <insights-title>Current Summary</insights-title>
                     ${data.summary.length > 0
                         ? data.summary
                               .slice(0, 5)
@@ -1152,7 +1221,7 @@ export class AssistantView extends LitElement {
                                       </div>
                                   `
                               )
-                        : html` <div class="request-item">No content yet...</div> `}
+                        : html` <div class="request-item">${this.getText('noContent')}</div> `}
                     ${data.topic.header
                         ? html`
                               <insights-title>${data.topic.header}</insights-title>
@@ -1174,7 +1243,7 @@ export class AssistantView extends LitElement {
                         : ''}
                     ${data.actions.length > 0
                         ? html`
-                              <insights-title>Actions</insights-title>
+                              <insights-title>${this.getText('actions')}</insights-title>
                               ${data.actions
                                   .slice(0, 5)
                                   .map(
@@ -1193,7 +1262,7 @@ export class AssistantView extends LitElement {
                         : ''}
                     ${this.hasCompletedRecording && data.followUps && data.followUps.length > 0
                         ? html`
-                              <insights-title>Follow-Ups</insights-title>
+                              <insights-title>${this.getText('followUps')}</insights-title>
                               ${data.followUps.map(
                                   (followUp, index) => html`
                                       <div

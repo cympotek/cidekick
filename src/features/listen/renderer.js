@@ -197,6 +197,8 @@ User-provided context (defer to this information over your general knowledge / i
 Make sure to **reference context** fully if it is provided (ex. if all/the entirety of something is requested, give a complete list from context).
 ----------
 
+IMPORTANT: Respond in {{LANGUAGE}} language. Keep all formatting and structure requirements.
+
 {{CONVERSATION_HISTORY}}`;
 
 function base64ToFloat32Array(base64) {
@@ -341,6 +343,7 @@ class SimpleAEC {
 }
 
 let aecProcessor = new SimpleAEC();
+let aecApplyCount = 0;
 
 const isLinux = process.platform === 'linux';
 const isMacOS = process.platform === 'darwin';
@@ -478,6 +481,9 @@ async function initializeopenai(profile = 'interview', language = 'en') {
 }
 
 
+// Add a counter for logging frequency control
+let systemAudioReceiveCount = 0;
+
 ipcRenderer.on('system-audio-data', (event, { data }) => {
     systemAudioBuffer.push({
         data: data,
@@ -489,7 +495,11 @@ ipcRenderer.on('system-audio-data', (event, { data }) => {
         systemAudioBuffer = systemAudioBuffer.slice(-MAX_SYSTEM_BUFFER_SIZE);
     }
 
-    console.log('📥 Received system audio for AEC reference');
+    // Only log every 100th message to reduce console spam
+    systemAudioReceiveCount++;
+    if (systemAudioReceiveCount % 100 === 0) {
+        console.log(`📥 Received system audio for AEC reference (${systemAudioReceiveCount} total)`);
+    }
 });
 
 // Listen for status updates
@@ -702,7 +712,11 @@ function setupMicProcessing(micStream) {
                 // Apply AEC only when system audio has active speech
                 if (isVoiceActive(systemFloat32)) {
                     processedChunk = aecProcessor.process(new Float32Array(chunk), systemFloat32);
-                    console.log('🔊 Applied AEC because system audio is active');
+                    aecApplyCount++;
+                    // Only log every 100th AEC application to reduce console spam
+                    if (aecApplyCount % 100 === 0) {
+                        console.log(`🔊 Applied AEC because system audio is active (${aecApplyCount} total)`);
+                    }
                 }
             }
 
@@ -949,7 +963,18 @@ async function sendMessage(userPrompt, options = {}) {
         const conversationHistory = formatRealtimeConversationHistory();
         console.log(`📝 Using conversation history: ${realtimeConversationHistory.length} texts`);
 
-        const systemPrompt = CIDEKICK_SYSTEM_PROMPT.replace('{{CONVERSATION_HISTORY}}', conversationHistory);
+        // Get language setting and map to full name
+        const selectedLanguage = localStorage.getItem('selectedLanguage') || 'en';
+        const languageNames = {
+            'en': 'English',
+            'zh': 'Chinese',
+            'ja': 'Japanese'
+        };
+        const languageName = languageNames[selectedLanguage] || languageNames['en'];
+        
+        const systemPrompt = CIDEKICK_SYSTEM_PROMPT
+            .replace('{{LANGUAGE}}', languageName)
+            .replace('{{CONVERSATION_HISTORY}}', conversationHistory);
 
         let API_KEY = localStorage.getItem('openai_api_key');
 

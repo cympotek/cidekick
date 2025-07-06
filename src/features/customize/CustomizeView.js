@@ -11,7 +11,7 @@ export class CustomizeView extends LitElement {
         :host {
             display: block;
             width: 180px;
-            min-height: 180px;
+            height: 100%;
             color: white;
         }
 
@@ -27,7 +27,8 @@ export class CustomizeView extends LitElement {
             box-sizing: border-box;
             position: relative;
             overflow-y: auto;
-            padding: 12px 12px;
+            overflow-x: hidden;
+            padding: 12px;
             z-index: 1000;
         }
 
@@ -76,10 +77,11 @@ export class CustomizeView extends LitElement {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding-bottom: 6px;
+            padding-bottom: 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             z-index: 1;
+            flex-shrink: 0;
         }
 
         .title-line {
@@ -123,6 +125,7 @@ export class CustomizeView extends LitElement {
             padding: 4px 0;
             position: relative;
             z-index: 1;
+            flex-shrink: 0;
         }
 
         .shortcut-item {
@@ -164,10 +167,11 @@ export class CustomizeView extends LitElement {
             flex-direction: column;
             gap: 4px;
             padding-top: 6px;
+            padding-bottom: 6px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             z-index: 1;
-            flex: 1;
+            flex-shrink: 0;
         }
 
         .settings-button {
@@ -220,8 +224,9 @@ export class CustomizeView extends LitElement {
         }
 
         .api-key-section {
-            padding: 6px 0;
+            padding: 4px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
 
         .api-key-section input {
@@ -233,6 +238,12 @@ export class CustomizeView extends LitElement {
             padding: 4px;
             font-size: 11px;
             margin-bottom: 4px;
+        }
+        
+        .language-section {
+            padding: 4px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
 
     `;
@@ -402,12 +413,9 @@ export class CustomizeView extends LitElement {
     }
 
     updateScrollHeight() {
-        const windowHeight = window.innerHeight;
-        const headerHeight = 60;
-        const padding = 40;
-        const maxHeight = windowHeight - headerHeight - padding;
-        
-        this.style.maxHeight = `${maxHeight}px`;
+        // Remove max height constraint to allow natural sizing
+        this.style.maxHeight = 'none';
+        this.style.height = 'auto';
     }
 
     async checkContentProtectionStatus() {
@@ -439,30 +447,8 @@ export class CustomizeView extends LitElement {
     getLanguages() {
         return [
             { value: 'en', name: 'English' },
-            { value: 'de', name: 'German' },
-            { value: 'es', name: 'Spanish' },
-            { value: 'fr', name: 'French' },
-            { value: 'hi', name: 'Hindi' },
-            { value: 'pt', name: 'Portuguese' },
-            { value: 'ar', name: 'Arabic' },
-            { value: 'id', name: 'Indonesian' },
-            { value: 'it', name: 'Italian' },
-            { value: 'ja', name: 'Japanese' },
-            { value: 'tr', name: 'Turkish' },
-            { value: 'vi', name: 'Vietnamese' },
-            { value: 'bn', name: 'Bengali' },
-            { value: 'gu', name: 'Gujarati' },
-            { value: 'kn', name: 'Kannada' },
-            { value: 'ml', name: 'Malayalam' },
-            { value: 'mr', name: 'Marathi' },
-            { value: 'ta', name: 'Tamil' },
-            { value: 'te', name: 'Telugu' },
-            { value: 'nl', name: 'Dutch' },
-            { value: 'ko', name: 'Korean' },
-            { value: 'zh', name: 'Chinese' },
-            { value: 'pl', name: 'Polish' },
-            { value: 'ru', name: 'Russian' },
-            { value: 'th', name: 'Thai' },
+            { value: 'zh', name: '中文 (Chinese)' },
+            { value: 'ja', name: '日本語 (Japanese)' },
         ];
     }
 
@@ -913,7 +899,7 @@ export class CustomizeView extends LitElement {
                     </div>
                 </div>
 
-                <div class="api-key-section" style="padding: 6px 0; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="api-key-section">
                     <input 
                         type="password" 
                         id="api-key-input"
@@ -925,6 +911,22 @@ export class CustomizeView extends LitElement {
                     <button class="settings-button full-width" @click=${this.handleSaveApiKey} ?disabled=${loggedIn}>
                         Save API Key
                     </button>
+                </div>
+
+                <div class="language-section">
+                    <label style="display: block; font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-bottom: 2px;">Language / 語言 / 言語</label>
+                    <select 
+                        class="language-select"
+                        @change=${this.handleLanguageSelect}
+                        .value=${this.selectedLanguage}
+                        style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; padding: 4px; font-size: 11px; appearance: none; cursor: pointer;"
+                    >
+                        ${this.getLanguages().map(lang => html`
+                            <option value="${lang.value}" ?selected="${this.selectedLanguage === lang.value}">
+                                ${lang.name}
+                            </option>
+                        `)}
+                    </select>
                 </div>
 
                 <div class="shortcuts-section">

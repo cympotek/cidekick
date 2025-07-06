@@ -631,21 +631,37 @@ export class AskView extends LitElement {
 
     async loadLibraries() {
         try {
-            if (!window.marked) {
-                await this.loadScript('../../assets/marked-4.3.0.min.js');
-            }
+            // Try to load from AssistantView if it's already loaded
+            const assistantView = document.querySelector('assistant-view');
+            if (assistantView && assistantView.marked && assistantView.hljs && assistantView.DOMPurify) {
+                this.marked = assistantView.marked;
+                this.hljs = assistantView.hljs;
+                this.DOMPurify = assistantView.DOMPurify;
+                console.log('Libraries loaded from AssistantView');
+            } else {
+                // Try loading scripts
+                if (!window.marked) {
+                    await this.loadScript('../../../assets/marked-4.3.0.min.js').catch(() => 
+                        this.loadScript('../../assets/marked-4.3.0.min.js')
+                    );
+                }
 
-            if (!window.hljs) {
-                await this.loadScript('../../assets/highlight-11.9.0.min.js');
-            }
+                if (!window.hljs) {
+                    await this.loadScript('../../../assets/highlight-11.9.0.min.js').catch(() => 
+                        this.loadScript('../../assets/highlight-11.9.0.min.js')
+                    );
+                }
 
-            if (!window.DOMPurify) {
-                await this.loadScript('../../assets/dompurify-3.0.7.min.js');
-            }
+                if (!window.DOMPurify) {
+                    await this.loadScript('../../../assets/dompurify-3.0.7.min.js').catch(() => 
+                        this.loadScript('../../assets/dompurify-3.0.7.min.js')
+                    );
+                }
 
-            this.marked = window.marked;
-            this.hljs = window.hljs;
-            this.DOMPurify = window.DOMPurify;
+                this.marked = window.marked || this.marked;
+                this.hljs = window.hljs || this.hljs;
+                this.DOMPurify = window.DOMPurify || this.DOMPurify;
+            }
 
             if (this.marked && this.hljs) {
                 this.marked.setOptions({
@@ -719,10 +735,43 @@ export class AskView extends LitElement {
 
     loadScript(src) {
         return new Promise((resolve, reject) => {
+            // Check if script already exists
+            const fileName = src.split('/').pop();
+            const existingScript = document.querySelector(`script[src*="${fileName}"]`);
+            if (existingScript) {
+                resolve();
+                return;
+            }
+            
             const script = document.createElement('script');
-            script.src = src;
+            
+            // Try multiple path resolutions
+            const pathsToTry = [
+                src,
+                src.replace('../../../assets/', '../../assets/'),
+                src.replace('../../../assets/', '../assets/'),
+                `/src/assets/${fileName}`,
+                `../assets/${fileName}`,
+                `../../assets/${fileName}`,
+                `./assets/${fileName}`
+            ];
+            
+            let currentPathIndex = 0;
+            
+            const tryNextPath = () => {
+                if (currentPathIndex >= pathsToTry.length) {
+                    reject(new Error(`Failed to load script: ${fileName}`));
+                    return;
+                }
+                
+                script.src = pathsToTry[currentPathIndex];
+                currentPathIndex++;
+            };
+            
             script.onload = resolve;
-            script.onerror = reject;
+            script.onerror = tryNextPath;
+            
+            tryNextPath();
             document.head.appendChild(script);
         });
     }

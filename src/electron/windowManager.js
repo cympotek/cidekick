@@ -111,7 +111,7 @@ function createFeatureWindows(header) {
     windowPool.set('ask', ask);
 
     // settings
-    const settings = new BrowserWindow({ ...commonChildOptions, width:240, height:450, parent:undefined });
+    const settings = new BrowserWindow({ ...commonChildOptions, width:240, height:550, parent:undefined });
     settings.setContentProtection(isContentProtectionOn);
     settings.setVisibleOnAllWorkspaces(true,{visibleOnFullScreen:true});
     settings.loadFile(path.join(__dirname,'../app/content.html'),{query:{view:'customize'}})
