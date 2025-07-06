@@ -1,9 +1,13 @@
 <p align="center">
+  English | <a href="README_ZH.md">中文</a>
+</p>
+
+<p align="center">
   <a href="https://cidekick.com">
    <img src="./public/assets/banner.gif" alt="Logo">
   </a>
 
-  <h1 align="center">Cidekick: Digital Mind Extension 🧠</h1>
+  <h1 align="center">Cidekick: Your AI assistant for manufacturing</h1>
 
 </p>
 
@@ -16,17 +20,11 @@
 
 🤖 **Your AI assistant for manufacturing.** Cidekick analyzes schematics, identifies components from images or live video, and helps streamline your entire production workflow.
 
-🤖 **您的 AI 製造業助理.** Cidekick 能分析電路圖、從圖片或即時影像中識別組件，並協助您簡化整體生產流程。
-
-💬 **Proactive in meetings**—it surfaces action items, summaries, and answers the instant you need them.
-
-🫥️ **Truly invisible**—never shows up in screen recordings, screenshots, or your dock; no always-on capture or hidden sharing.
-
 To have fun building with us, join our [Discord](https://discord.gg/UCZH5B5Hpd)!
 
 ## Instant Launch
 
-⚡️  Skip the setup—launch instantly with our ready-to-run macOS app.  [[Download Here]](https://www.dropbox.com/scl/fi/znid09apxiwtwvxer6oc9/Cidekick_latest.dmg?rlkey=gwvvyb3bizkl25frhs4k1zwds&st=37q31b4w&dl=1)
+⚡️  Skip the setup—launch instantly with our ready-to-run macOS app.  [[Download Here]](https://www.dropbox.com/scl/fi/znid09apxiwtwvxer6oc9/Cidekick_latest.dmg?rlkey=gwvvyb3bizkl25frhs4k1zwds&st=37q31b4w&dl=1)
 
 ## Quick Start (Local Build)
 
@@ -55,7 +53,7 @@ npm run setup
 
 ## Highlights
 
-### Component Identification / 零件識別
+### Component Identification
 <img width="100%" alt="component-identification" src="./public/assets/image.png">
 
 ### Ask: get answers based on all your previous screen actions & audio
