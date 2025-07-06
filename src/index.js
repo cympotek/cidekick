@@ -311,7 +311,7 @@ async function handleFirebaseAuthCallback(params) {
     console.log('[Auth] Received ID token from deep link, exchanging for custom token...');
 
     try {
-        const functionUrl = 'https://us-west1-pickle-3651a.cloudfunctions.net/pickleGlassAuthCallback';
+        const functionUrl = 'https://us-west1-cidekick-3651a.cloudfunctions.net/cidekickAuthCallback';
         const response = await fetch(functionUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -548,7 +548,7 @@ function initAutoUpdater() {
 
         autoUpdater.setFeedURL({
             provider: 'github',
-            owner: 'pickle-com',
+            owner: 'cidekick-com',
             repo: 'glass',
         });
 

@@ -2,7 +2,7 @@
   "functions": [
     {
       "source": "functions",
-      "codebase": "pickle-glass",
+      "codebase": "cidekick",
       "ignore": [
         "node_modules",
         ".git",
@@ -20,7 +20,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "pickleglass_web/out",
+    "public": "cidekick_web/out",
     "ignore": [
       "firebase.json",
       "**/.*",

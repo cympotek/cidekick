@@ -146,8 +146,21 @@ async function connectToGeminiSession(apiKey, { language = 'en-US', callbacks = 
         const liveClient = new GoogleGenAI({ vertexai: false, apiKey });
     
         // ② 언어 코드 강제 BCP-47 변환
-        const lang = language.includes('-') ? language : `${language}-US`;
-        console.log(`[DEBUG] Using language: ${lang}`);
+        // Map language codes to proper BCP-47 format for Gemini
+        let lang;
+        if (language.includes('-')) {
+            lang = language;
+        } else {
+            // Map short codes to proper locales
+            // Based on Gemini Live API documentation
+            const languageMap = {
+                'en': 'en-US',
+                'zh': 'cmn-CN',  // Chinese (Mandarin) - per Gemini docs
+                'ja': 'ja-JP'    // Japanese
+            };
+            lang = languageMap[language] || language || 'en-US';
+        }
+        console.log(`[DEBUG] Using language: ${lang} (from ${language})`);
     
         try {
             const session = await liveClient.live.connect({
@@ -155,7 +168,9 @@ async function connectToGeminiSession(apiKey, { language = 'en-US', callbacks = 
                 callbacks,
                 config: {
                     inputAudioTranscription: {},
-                    speechConfig: { languageCode: lang },
+                    speechConfig: { 
+                        languageCode: lang
+                    },
                 },
             });
             

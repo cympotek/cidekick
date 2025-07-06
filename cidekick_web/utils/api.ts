@@ -240,13 +240,13 @@ const userInfoListeners: Array<(userInfo: UserProfile | null) => void> = [];
 export const getUserInfo = (): UserProfile | null => {
   if (typeof window === 'undefined') return null;
   
-  const storedUserInfo = localStorage.getItem('pickleglass_user');
+  const storedUserInfo = localStorage.getItem('cidekick_user');
   if (storedUserInfo) {
     try {
       return JSON.parse(storedUserInfo);
     } catch (error) {
       console.error('Failed to parse user info:', error);
-      localStorage.removeItem('pickleglass_user');
+      localStorage.removeItem('cidekick_user');
     }
   }
   return null;
@@ -256,9 +256,9 @@ export const setUserInfo = (userInfo: UserProfile | null, skipEvents: boolean = 
   if (typeof window === 'undefined') return;
   
   if (userInfo) {
-    localStorage.setItem('pickleglass_user', JSON.stringify(userInfo));
+    localStorage.setItem('cidekick_user', JSON.stringify(userInfo));
   } else {
-    localStorage.removeItem('pickleglass_user');
+    localStorage.removeItem('cidekick_user');
   }
   
   if (!skipEvents) {

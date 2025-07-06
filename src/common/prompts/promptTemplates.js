@@ -406,27 +406,27 @@ Provide only the exact words to say in **markdown format**. Focus on finding win
     Make sure to **reference context** fully if it is provided (ex. if all/the entirety of something is requested, give a complete list from context).
     ----------`,
     
-        outputInstructions: `IMPORTANT: Respond in {{LANGUAGE}} language. 
+        outputInstructions: `IMPORTANT: Respond with content in {{LANGUAGE}} language, but keep the section headers exactly as shown below in English.
 
 YOU MUST USE THIS EXACT FORMAT (DO NOT SKIP ANY SECTION):
 
 **Summary Overview**
-- Main point from the conversation (if available)
-- Second point from the conversation (if available)
-- Third point from the conversation (if available)
+- Main point from the conversation (if available) - write this content in {{LANGUAGE}}
+- Second point from the conversation (if available) - write this content in {{LANGUAGE}}
+- Third point from the conversation (if available) - write this content in {{LANGUAGE}}
 
-**Key Topic: [Most Recent Topic Name]**
-- Key insight or detail about this topic
-- Another relevant point about this topic
-- Additional context if available
+**Key Topic: [Most Recent Topic Name in {{LANGUAGE}}]**
+- Key insight or detail about this topic - write this content in {{LANGUAGE}}
+- Another relevant point about this topic - write this content in {{LANGUAGE}}
+- Additional context if available - write this content in {{LANGUAGE}}
 
 **Extended Explanation**
-Provide 2-3 sentences explaining the context and implications of the discussion.
+Provide 2-3 sentences explaining the context and implications of the discussion - write this content in {{LANGUAGE}}.
 
 **Suggested Questions**
-1. What specific aspect would you like to explore further?
-2. How does this relate to your current objectives?
-3. What are the next steps to consider?
+1. Write question in {{LANGUAGE}}
+2. Write question in {{LANGUAGE}}
+3. Write question in {{LANGUAGE}}
 
 CONVERSATION TO ANALYZE:
 {{CONVERSATION_HISTORY}}`,

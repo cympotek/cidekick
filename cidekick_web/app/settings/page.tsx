@@ -202,7 +202,7 @@ export default function SettingsPage() {
           </div>
           
           <p className="text-gray-600 mb-6">
-            Experience how Pickle Glass works with unlimited responses.
+            Experience how cidekick Glass works with unlimited responses.
           </p>
           
           <ul className="space-y-3 mb-8">
@@ -331,8 +331,8 @@ export default function SettingsPage() {
             <h4 className="font-semibold text-green-900">All features are currently free!</h4>
             <p className="text-green-700 text-sm">
               {isFirebaseMode 
-                ? 'Enjoy all Pickle Glass features for free in Firebase hosting mode. Pro and Enterprise plans will be released soon with additional premium features.'
-                : 'Enjoy all Pickle Glass features for free in local mode. You can use personal API keys or continue using the free system.'
+                ? 'Enjoy all cidekick Glass features for free in Firebase hosting mode. Pro and Enterprise plans will be released soon with additional premium features.'
+                : 'Enjoy all cidekick Glass features for free in local mode. You can use personal API keys or continue using the free system.'
               }
             </p>
           </div>
@@ -450,7 +450,7 @@ export default function SettingsPage() {
                  <p className="text-sm text-gray-600 mb-4">
                    {isFirebaseMode 
                      ? 'Permanently remove your Firebase account and all content. This action cannot be undone, so please proceed carefully.'
-                     : 'Permanently remove your personal account and all content from the Pickle Glass platform. This action cannot be undone, so please proceed carefully.'
+                     : 'Permanently remove your personal account and all content from the cidekick Glass platform. This action cannot be undone, so please proceed carefully.'
                    }
                  </p>
                  <div className="mt-4 pt-4 border-t border-gray-200 flex justify-end">

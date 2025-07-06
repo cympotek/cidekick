@@ -20,7 +20,7 @@
     <true/>
     <key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
     <array>
-      <string>com.deeplink.pickleglass.MachPortRendezvousServer.*</string>
+      <string>com.deeplink.cidekick.MachPortRendezvousServer.*</string>
     </array>
     <key>com.apple.security.app-sandbox</key>
     <false/>

@@ -10,13 +10,13 @@ class DatabaseInitializer {
         
         // 최종적으로 사용될 DB 경로 (쓰기 가능한 위치)
         const userDataPath = app.getPath('userData');
-        this.dbPath = path.join(userDataPath, 'pickleglass.db');
+        this.dbPath = path.join(userDataPath, 'cidekick.db');
         this.dataDir = userDataPath;
 
         // 원본 DB 경로 (패키지 내 읽기 전용 위치)
         this.sourceDbPath = app.isPackaged
-            ? path.join(process.resourcesPath, 'data', 'pickleglass.db')
-            : path.join(app.getAppPath(), 'data', 'pickleglass.db');
+            ? path.join(process.resourcesPath, 'data', 'cidekick.db')
+            : path.join(app.getAppPath(), 'data', 'cidekick.db');
     }
 
     ensureDatabaseExists() {

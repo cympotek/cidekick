@@ -266,7 +266,7 @@ export class ApiKeyHeader extends LitElement {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInput = this.handleInput.bind(this);
         this.handleAnimationEnd = this.handleAnimationEnd.bind(this);
-        this.handleUsePicklesKey = this.handleUsePicklesKey.bind(this);
+        this.handleUsecidekicksKey = this.handleUsecidekicksKey.bind(this);
         this.handleProviderChange = this.handleProviderChange.bind(this);
     }
 
@@ -492,7 +492,7 @@ export class ApiKeyHeader extends LitElement {
         this.classList.add('sliding-out');
     }
 
-    handleUsePicklesKey(e) {
+    handleUsecidekicksKey(e) {
         e.preventDefault();
         if (this.wasJustDragged) return;
 
@@ -588,7 +588,7 @@ export class ApiKeyHeader extends LitElement {
 
                     <div class="or-text">or</div>
 
-                    <button class="action-button" @click=${this.handleUsePicklesKey}>Use Cidekick's API Key</button>
+                    <button class="action-button" @click=${this.handleUsecidekicksKey}>Use Cidekick's API Key</button>
                 </div>
             </div>
         `;

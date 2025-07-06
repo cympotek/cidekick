@@ -29,7 +29,7 @@ export default function HelpPage() {
               <h2 className="text-xl font-semibold text-gray-900">Getting Started</h2>
             </div>
             <p className="text-gray-600 mb-4">
-              New to pickleglass? Learn about basic features and setup methods.
+              New to cidekick? Learn about basic features and setup methods.
             </p>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>• Setting up personalized contexts</li>

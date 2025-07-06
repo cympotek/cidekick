@@ -7,7 +7,7 @@ import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth'
 const defaultLocalUser: UserProfile = {
   uid: 'default_user',
   display_name: 'Default User',
-  email: 'contact@pickle.com',
+  email: 'contact@cidekick.com',
 };
 
 export const useAuth = () => {

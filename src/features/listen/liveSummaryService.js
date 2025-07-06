@@ -224,8 +224,18 @@ Analyze the conversation and provide a structured summary.`,
         });
 
         const responseText = completion.content;
-        console.log(`✅ Analysis response received: ${responseText}`);
-        const structuredData = parseResponseText(responseText, previousAnalysisResult);
+        console.log(`✅ Analysis response received (language: ${language}):`);
+        console.log('=== RESPONSE START ===');
+        console.log(responseText);
+        console.log('=== RESPONSE END ===');
+        
+        // Check if we got a valid response
+        if (!responseText || responseText.trim().length === 0) {
+            console.error('❌ Empty response from AI analysis');
+            return previousAnalysisResult;
+        }
+        
+        const structuredData = parseResponseText(responseText, previousAnalysisResult, language);
 
         if (currentSessionId) {
             sqliteClient.saveSummary({
@@ -257,12 +267,33 @@ Analyze the conversation and provide a structured summary.`,
     }
 }
 
-function parseResponseText(responseText, previousResult) {
+function parseResponseText(responseText, previousResult, language = 'en') {
+    // Define localized default actions
+    const localizedActions = {
+        'en': {
+            whatNext: '✨ What should I say next?',
+            followUp: '💬 Suggest follow-up questions',
+            followUps: ['✉️ Draft a follow-up email', '✅ Generate action items', '📝 Show summary']
+        },
+        'zh': {
+            whatNext: '✨ 接下來我該說什麼？',
+            followUp: '💬 建議後續問題',
+            followUps: ['✉️ 起草後續郵件', '✅ 生成行動項目', '📝 顯示摘要']
+        },
+        'ja': {
+            whatNext: '✨ 次に何を言うべきですか？',
+            followUp: '💬 フォローアップの質問を提案',
+            followUps: ['✉️ フォローアップメールの下書き', '✅ アクションアイテムの生成', '📝 サマリーを表示']
+        }
+    };
+
+    const currentLang = localizedActions[language] || localizedActions['en'];
+    
     const structuredData = {
         summary: [],
         topic: { header: '', bullets: [] },
         actions: [],
-        followUps: ['✉️ Draft a follow-up email', '✅ Generate action items', '📝 Show summary'],
+        followUps: currentLang.followUps,
     };
 
     // 이전 결과가 있으면 기본값으로 사용
@@ -280,14 +311,15 @@ function parseResponseText(responseText, previousResult) {
         for (const line of lines) {
             const trimmedLine = line.trim();
 
-            // 섹션 헤더 감지
+            // 섹션 헤더 감지 - Now expecting English headers only since prompt specifies to keep headers in English
             if (trimmedLine.startsWith('**Summary Overview**')) {
                 currentSection = 'summary-overview';
                 continue;
             } else if (trimmedLine.startsWith('**Key Topic:')) {
                 currentSection = 'topic';
                 isCapturingTopic = true;
-                topicName = trimmedLine.match(/\*\*Key Topic: (.+?)\*\*/)?.[1] || '';
+                // Extract topic name (which will be in the target language)
+                topicName = trimmedLine.match(/\*\*Key Topic:\s*(.+?)\*\*/)?.[1] || '';
                 if (topicName) {
                     structuredData.topic.header = topicName + ':';
                 }
@@ -327,16 +359,36 @@ function parseResponseText(responseText, previousResult) {
                         structuredData.topic.bullets.push(sentence);
                     }
                 });
-            } else if (trimmedLine.match(/^\d+\./) && currentSection === 'questions') {
-                const question = trimmedLine.replace(/^\d+\.\s*/, '').trim();
-                if (question && question.includes('?')) {
-                    structuredData.actions.push(`❓ ${question}`);
+            } else if (currentSection === 'questions' && trimmedLine.length > 0) {
+                // More flexible pattern matching for numbered questions
+                let question = trimmedLine;
+                
+                // Remove various numbering formats
+                question = question.replace(/^[\d１-９]+[\.、。]\s*/, ''); // Arabic or full-width numbers
+                question = question.replace(/^[一二三四五六七八九十]+[、。]\s*/, ''); // Chinese numbers
+                question = question.replace(/^[①②③④⑤⑥⑦⑧⑨⑩]+\s*/, ''); // Circled numbers
+                question = question.trim();
+                
+                // Check if it looks like a question (more flexible detection)
+                if (question && question.length > 5) { // At least 5 characters
+                    // Add question if it contains question markers or is in questions section
+                    const hasQuestionMark = question.includes('?') || question.includes('？');
+                    const hasChineseQuestion = question.includes('吗') || question.includes('嗎') || 
+                                              question.includes('呢') || question.includes('么') || 
+                                              question.includes('什么') || question.includes('怎么') ||
+                                              question.includes('為什麼') || question.includes('怎麼');
+                    const hasJapaneseQuestion = question.includes('か') || question.includes('の') || 
+                                               question.includes('ですか') || question.includes('ますか');
+                    
+                    if (hasQuestionMark || hasChineseQuestion || hasJapaneseQuestion || currentSection === 'questions') {
+                        structuredData.actions.push(`❓ ${question}`);
+                    }
                 }
             }
         }
 
         // 기본 액션 추가
-        const defaultActions = ['✨ What should I say next?', '💬 Suggest follow-up questions'];
+        const defaultActions = [currentLang.whatNext, currentLang.followUp];
         defaultActions.forEach(action => {
             if (!structuredData.actions.includes(action)) {
                 structuredData.actions.push(action);
@@ -360,8 +412,8 @@ function parseResponseText(responseText, previousResult) {
             previousResult || {
                 summary: [],
                 topic: { header: 'Analysis in progress', bullets: [] },
-                actions: ['✨ What should I say next?', '💬 Suggest follow-up questions'],
-                followUps: ['✉️ Draft a follow-up email', '✅ Generate action items', '📝 Show summary'],
+                actions: [currentLang.whatNext, currentLang.followUp],
+                followUps: currentLang.followUps,
             }
         );
     }
@@ -436,11 +488,21 @@ function stopAnalysisInterval() {
 }
 
 function sendToRenderer(channel, data) {
-    BrowserWindow.getAllWindows().forEach(win => {
-        if (!win.isDestroyed()) {
-            win.webContents.send(channel, data);
+    try {
+        const windows = BrowserWindow.getAllWindows();
+        // Only log important messages, not audio data
+        if (channel !== 'system-audio-data' && !channel.includes('stt-update')) {
+            console.log(`[sendToRenderer] Sending ${channel} to ${windows.length} windows`);
         }
-    });
+        
+        windows.forEach(win => {
+            if (!win.isDestroyed() && win.webContents && !win.webContents.isDestroyed()) {
+                win.webContents.send(channel, data);
+            }
+        });
+    } catch (error) {
+        console.error(`[sendToRenderer] Error sending ${channel}:`, error);
+    }
 }
 
 function getCurrentSessionData() {
@@ -565,6 +627,8 @@ async function saveConversationTurn(speaker, transcription) {
 async function initializeLiveSummarySession(language = 'en') {
     // Use system environment variable if set, otherwise use the provided language
     const effectiveLanguage = process.env.OPENAI_TRANSCRIBE_LANG || language || 'en';
+    console.log(`[LiveSummaryService] Initializing session with language: ${effectiveLanguage} (requested: ${language})`);
+    
     if (isInitializingSession) {
         console.log('Session initialization already in progress.');
         return false;
@@ -606,7 +670,11 @@ async function initializeLiveSummarySession(language = 'en') {
 
             if (isGemini) {
                 console.log('[Gemini Raw Message - Me]:', JSON.stringify(message, null, 2));
-                const text = message.serverContent?.inputTranscription?.text || '';
+                // Check multiple possible paths for Gemini transcription
+                const text = message.serverContent?.inputTranscription?.text || 
+                           message.serverContent?.modelTurn?.parts?.[0]?.text ||
+                           message.serverContent?.turnComplete?.parts?.[0]?.text ||
+                           '';
                 if (text && text.trim()) {
                     console.log(`[DEBUG] Gemini transcription received for Me: "${text}"`);
                     const finalUtteranceText = text.trim().replace(/<noise>/g, '').trim();
@@ -615,6 +683,11 @@ async function initializeLiveSummarySession(language = 'en') {
                     }
                 } else {
                     console.log('[DEBUG] Gemini message received but no transcription text found');
+                    console.log('[DEBUG] Message structure:', {
+                        hasServerContent: !!message.serverContent,
+                        serverContentKeys: message.serverContent ? Object.keys(message.serverContent) : [],
+                        fullMessage: message
+                    });
                 }
             } else {
                 const type = message.type;
@@ -664,7 +737,11 @@ async function initializeLiveSummarySession(language = 'en') {
 
             if (isGemini) {
                 console.log('[Gemini Raw Message - Them]:', JSON.stringify(message, null, 2));
-                const text = message.serverContent?.inputTranscription?.text || '';
+                // Check multiple possible paths for Gemini transcription
+                const text = message.serverContent?.inputTranscription?.text || 
+                           message.serverContent?.modelTurn?.parts?.[0]?.text ||
+                           message.serverContent?.turnComplete?.parts?.[0]?.text ||
+                           '';
                 if (text && text.trim()) {
                     console.log(`[DEBUG] Gemini transcription received for Them: "${text}"`);
                     const finalUtteranceText = text.trim().replace(/<noise>/g, '').trim();
@@ -673,6 +750,11 @@ async function initializeLiveSummarySession(language = 'en') {
                     }
                 } else {
                     console.log('[DEBUG] Gemini message received but no transcription text found');
+                    console.log('[DEBUG] Message structure:', {
+                        hasServerContent: !!message.serverContent,
+                        serverContentKeys: message.serverContent ? Object.keys(message.serverContent) : [],
+                        fullMessage: message
+                    });
                 }
             } else {
                 const type = message.type;

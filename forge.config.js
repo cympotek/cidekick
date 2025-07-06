@@ -7,15 +7,15 @@ module.exports = {
         asar: {
             unpack: '**/*.node,**/*.dylib,' + '**/node_modules/{sharp,@img}/**/*',
         },
-        extraResource: ['./src/assets/SystemAudioDump', './pickleglass_web/out'],
-        name: 'Glass',
+        extraResource: ['./src/assets/SystemAudioDump', './cidekick_web/out'],
+        name: 'Cidekick',
         icon: 'src/assets/logo',
-        appBundleId: 'com.pickle.glass',
+        appBundleId: 'com.cidekick.cympotek',
         arch: 'universal',
         protocols: [
             {
-                name: 'PickleGlass Protocol',
-                schemes: ['pickleglass'],
+                name: 'cidekick Protocol',
+                schemes: ['cidekick'],
             },
         ],
         asarUnpack: [
@@ -44,9 +44,9 @@ module.exports = {
         {
             name: '@electron-forge/maker-squirrel',
             config: {
-                name: 'pickle-glass',
-                productName: 'Glass',
-                shortcutName: 'Glass',
+                name: 'Cympotek',
+                productName: 'cidekick',
+                shortcutName: 'cidekick',
                 createDesktopShortcut: true,
                 createStartMenuShortcut: true,
             },
