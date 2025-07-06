@@ -53,8 +53,6 @@ npm run setup
 ### Component Identification
 <img width="100%" alt="component-identification" src="./public/assets/image2.png">
 
-<img width="100%" alt="component-identification" src="./public/assets/image3.png">
-
 ## Multi-Language Support
 
 Currently supports English, Chinese (中文), and Japanese (日文). 
