@@ -164,10 +164,11 @@ async function connectToGeminiSession(apiKey, { language = 'en-US', callbacks = 
             // ③ SDK 0.5+ : sendRealtimeInput 가 정식 이름
             return {
                 sendRealtimeInput: async payload => {
-                    console.log('[DEBUG] Sending payload to Gemini:', { 
-                        hasAudio: !!payload.audio,
-                        audioDataLength: payload.audio?.data?.length || 0
-                    });
+                    // Commented out to reduce console spam
+                    // console.log('[DEBUG] Sending payload to Gemini:', { 
+                    //     hasAudio: !!payload.audio,
+                    //     audioDataLength: payload.audio?.data?.length || 0
+                    // });
                     return session.sendRealtimeInput(payload);
                 },
                 close: async () => session.close(),

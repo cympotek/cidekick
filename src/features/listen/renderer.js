@@ -495,9 +495,9 @@ ipcRenderer.on('system-audio-data', (event, { data }) => {
         systemAudioBuffer = systemAudioBuffer.slice(-MAX_SYSTEM_BUFFER_SIZE);
     }
 
-    // Only log every 100th message to reduce console spam
+    // Only log every 1000th message to reduce console spam
     systemAudioReceiveCount++;
-    if (systemAudioReceiveCount % 100 === 0) {
+    if (systemAudioReceiveCount % 1000 === 0) {
         console.log(`📥 Received system audio for AEC reference (${systemAudioReceiveCount} total)`);
     }
 });
@@ -713,8 +713,8 @@ function setupMicProcessing(micStream) {
                 if (isVoiceActive(systemFloat32)) {
                     processedChunk = aecProcessor.process(new Float32Array(chunk), systemFloat32);
                     aecApplyCount++;
-                    // Only log every 100th AEC application to reduce console spam
-                    if (aecApplyCount % 100 === 0) {
+                    // Only log every 1000th AEC application to reduce console spam
+                    if (aecApplyCount % 1000 === 0) {
                         console.log(`🔊 Applied AEC because system audio is active (${aecApplyCount} total)`);
                     }
                 }

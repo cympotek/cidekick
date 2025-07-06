@@ -967,8 +967,8 @@ function setupLiveSummaryIpcHandlers() {
         
         audioSendCount++;
         
-        // Only log every 100th audio chunk to reduce console spam
-        if (audioSendCount % 100 === 0) {
+        // Only log every 1000th audio chunk to reduce console spam even more
+        if (audioSendCount % 1000 === 0) {
             console.log(`[DEBUG] send-audio-content called (${audioSendCount} total) - Provider: ${provider}, mimeType: ${mimeType}, dataLength: ${data?.length || 0}`);
         }
         
